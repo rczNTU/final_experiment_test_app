@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EEG Experiment</title>
+<style>
+body{
+    background:black;
+    color:white;
+    text-align:center;
+    font-family:monospace;
+}
+button{
+    font-size:20px;
+    padding:10px 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>FYP EEG Study</h1>
+<form id="patternForm" method="POST" action="/start">
+
+<h2>Choose and Order Patterns</h2>
+
+<ul id="patternList">
+
+<li data-value="1">
+<label><input type="checkbox" name="patterns" value="1"> Pattern 1</label>
+</li>
+
+<li data-value="4">
+<label><input type="checkbox" name="patterns" value="4"> Pattern 4</label>
+</li>
+
+<li data-value="7">
+<label><input type="checkbox" name="patterns" value="7"> Pattern 7</label>
+</li>
+
+<li data-value="11">
+<label><input type="checkbox" name="patterns" value="11"> Pattern 11</label>
+</li>
+
+</ul>
+
+<br>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+
+const list = document.getElementById("patternList")
+const form = document.getElementById("patternForm")
+
+new Sortable(list, {
+    animation: 150
+})
+
+form.addEventListener("submit", function(){
+
+    const items = list.querySelectorAll("li")
+
+    let ordered = []
+
+    items.forEach(li => {
+
+        const checkbox = li.querySelector("input")
+
+        if(checkbox.checked){
+            ordered.push(checkbox.value)
+        }
+
+    })
+
+    if(ordered.length === 0){
+        alert("Select at least one pattern")
+        event.preventDefault()
+        return
+    }
+
+    // remove old inputs
+    form.querySelectorAll("input[name='patterns']").forEach(i => i.remove())
+
+    // create hidden ordered inputs
+    ordered.forEach(p => {
+
+        const input = document.createElement("input")
+
+        input.type = "hidden"
+        input.name = "patterns"
+        input.value = p
+
+        form.appendChild(input)
+
+    })
+
+})
+
+</script>
+<label>Enter any name:</label>
+<input id="usernameInput" name="username" type="text" placeholder="Enter username">
+
+<br><br>
+<button id="startBtn" type="submit">Start Experiment</button>
+
+</form>
+
+</body>
+</html>
