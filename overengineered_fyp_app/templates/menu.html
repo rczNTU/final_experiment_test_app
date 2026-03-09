@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EEG Experiment</title>
+<style>
+#layout{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows:auto auto;
+    gap:60px;
+    margin-top:40px;
+}
+
+/* top left */
+#leftPanel{
+    width:100%;
+}
+
+#rightPanel{
+    width:100%;
+    text-align:left;
+    font-size:18px;
+    line-height:1.6;
+}
+
+#rightPanel h2{
+    font-size:28px;
+}
+
+#rightPanel p{
+    font-size:18px;
+}
+
+/* bottom tables */
+#leaderboards{
+    grid-column:1 / span 2;
+    display:flex;
+    justify-content:center;
+    gap:120px;
+    margin-top:20px;
+}
+
+.board{
+    width:300px;
+}
+
+body{
+    background:black;
+    color:white;
+    text-align:center;
+    font-family:monospace;
+}
+
+button{
+    font-size:20px;
+    padding:10px 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>FYP EEG Study</h1>
+
+<div id="layout">
+
+    <div id="leftPanel">
+
+        <form id="patternForm" method="POST" action="/start">
+
+            <h2>Choose and Order Patterns</h2>
+
+            <ul id="patternList">
+                <li data-value="1">
+                    <label><input type="checkbox" name="patterns" value="1"> Pattern 1</label>
+                </li>
+
+                <li data-value="4">
+                    <label><input type="checkbox" name="patterns" value="4"> Pattern 4</label>
+                </li>
+
+                <li data-value="7">
+                    <label><input type="checkbox" name="patterns" value="7"> Pattern 7</label>
+                </li>
+
+                <li data-value="11">
+                    <label><input type="checkbox" name="patterns" value="11"> Pattern 11</label>
+                </li>
+            </ul>
+
+            <br>
+
+            <label>Enter any name:</label>
+            <label>
+                Participant ID (choose any unique nickname, do NOT use your real name):
+            </label>
+            <input id="usernameInput" name="username" type="text" maxlength="12">
+
+            <div id="usernameError" style="color:#ff7070; font-size:14px; height:18px; margin-top:6px;"></div>
+
+            <br><br>
+            <button id="startBtn" type="submit">Start Experiment</button>
+
+        </form>
+
+    </div>
+
+    <div id="rightPanel">
+        <h2>Instructions</h2>
+            <p>
+            This study investigates how the brain responds to visual flicker patterns
+            while EEG signals are recorded.
+            </p>
+
+            <p>
+            The experiment consists of <b>20 trials</b>: 10 baseline trials and
+            10 flicker-pattern trials. Each trial lasts around <b>20 seconds</b>, so the
+            total duration of the experiment is approximately <b>400 seconds
+            (6 minutes and 40 seconds)</b>.
+            </p>
+
+            <p>
+            During the experiment you will see a flickering visual stimulus on the screen,
+            which may appear as small flashing lights or "firefly-like" patterns.
+            Please keep your eyes focused on the centre of the screen at all times and
+            avoid unnecessary movement. Try to minimise blinking if possible.
+            </p>
+
+            <p>
+            Occasionally, the fixation cross in the centre of the screen will briefly
+            shrink into a small box. When you notice this change, press the
+            <b>SPACEBAR</b>.
+            </p>
+
+            <p>
+            Since the experiment involves repeating several trials, it may feel a
+            little repetitive at times. This small reaction-time task is included
+            to help keep you attentive while EEG data is being recorded.
+            </p>
+    </div>
+
+    <!-- <div id="leaderboards">
+        <div class="board">
+            <h3>Leaderboard 1</h3>
+            <div id="leaderboardLeft"></div>
+        </div>
+
+        <div class="board">
+            <h3>Leaderboard 2</h3>
+            <div id="leaderboardRight"></div>
+        </div>
+    </div> -->
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+const list = document.getElementById("patternList")
+const form = document.getElementById("patternForm")
+
+new Sortable(list, {
+    animation: 150
+})
+
+form.addEventListener("submit", function(event){
+
+    const usernameInput = document.getElementById("usernameInput")
+    const usernameError = document.getElementById("usernameError")
+
+    const username = usernameInput.value.trim()
+
+    usernameError.innerText = ""
+
+    // username empty check
+    if(username === ""){
+        usernameError.innerText = "Please enter a participant ID"
+        event.preventDefault()
+        return
+    }
+
+    const items = list.querySelectorAll("li")
+    let ordered = []
+
+    items.forEach(li => {
+        const checkbox = li.querySelector("input")
+        if(checkbox.checked){
+            ordered.push(checkbox.value)
+        }
+    })
+
+    if(ordered.length === 0){
+        alert("Select at least one pattern")
+        event.preventDefault()
+        return
+    }
+
+    form.querySelectorAll("input[name='patterns']").forEach(i => i.remove())
+
+    ordered.forEach(p => {
+        const input = document.createElement("input")
+        input.type = "hidden"
+        input.name = "patterns"
+        input.value = p
+        form.appendChild(input)
+    })
+
+})
+document.getElementById("usernameInput").addEventListener("input", () => {
+    document.getElementById("usernameError").innerText = ""
+})
+</script>
+
+<script src="/static/menu.js"></script>
+</body>
+</html>
