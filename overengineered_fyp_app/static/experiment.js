@@ -325,13 +325,13 @@ async function trialBarrier(nextBlock){
 
         else if(isHalfway){
             // showSticker("🎉 HALFWAY!")
-            showMascot({
-                textTop: "Halfway there!",
-                textBottom: "Here's a cute bear",
-                duration: 9000,
-                x: "90%",
-                y: "90%"
-            })
+            // showMascot({
+            //     textTop: "Halfway there!",
+            //     textBottom: "Here's a cute bear",
+            //     duration: 9000,
+            //     x: "90%",
+            //     y: "90%"
+            // })
             label = `Next: Pattern ${currentPattern}`
         }
 
