@@ -221,7 +221,7 @@ function updateMiniBoard(){
 
     let text = "<b>Fastest reflex</b><br>"
 
-    let displayBoard = [...board]
+    let displayBoard = board.filter(p => p.username !== username)
 
     if(bestRT){
         displayBoard.push({
