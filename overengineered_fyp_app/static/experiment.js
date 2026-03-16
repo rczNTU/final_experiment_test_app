@@ -1,8 +1,8 @@
 import { showSticker, showMascot, clearAlerts } from "./alerts.js"
-const BASELINE_TIME = 5000
-const PATTERN_TIME = 5000
+const BASELINE_TIME = 21000
+const PATTERN_TIME = 21000
 const REPEATS = 2
-
+///
 const RESPONSE_WINDOW = 2000
 const MIN_DELAY = 2500
 const MAX_DELAY = 3500
@@ -221,8 +221,10 @@ function updateMiniBoard(){
 
     let text = "<b>Fastest reflex</b><br>"
 
+    // remove current user
     let displayBoard = board.filter(p => p.username !== username)
 
+    // add "You"
     if(bestRT){
         displayBoard.push({
             username: "You",
@@ -231,19 +233,12 @@ function updateMiniBoard(){
         })
     }
 
-    // ------------------------
-    // Ensure avg_rt exists
-    // ------------------------
-
-    displayBoard.forEach(p=>{
-        if(p.avg_rt === undefined || p.avg_rt === null){
-            p.avg_rt = p.best_rt
-        }
-    })
-
-    // ------------------------
-    // FASTEST REFLEX
-    // ------------------------
+    // safe normalize
+    displayBoard = displayBoard.map(p => ({
+        username: p.username,
+        best_rt: p.best_rt,
+        avg_rt: (p.avg_rt ?? p.best_rt)
+    }))
 
     const fastest = [...displayBoard]
         .sort((a,b)=>a.best_rt-b.best_rt)
@@ -254,10 +249,6 @@ function updateMiniBoard(){
     })
 
     text += "<br><b>Leaderboard</b><br>"
-
-    // ------------------------
-    // CONSISTENCY LEADERBOARD
-    // ------------------------
 
     const consistent = [...displayBoard]
         .sort((a,b)=>a.avg_rt-b.avg_rt)
