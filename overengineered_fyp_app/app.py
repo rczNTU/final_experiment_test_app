@@ -154,11 +154,21 @@ def experiment():
 @app.route("/save", methods=["POST"])
 def save():
 
+
     data = request.json
 
     best_rt = data.get("bestRT")
     username = data.get("username", "anon")
-    avg_rt = data.get("avgRT", best_rt)
+
+    all_rts = data.get("allRTs", [])
+
+    if all_rts:
+        avg_rt = sum(all_rts) / len(all_rts)
+    else:
+        avg_rt = best_rt
+
+    best_rt = round(best_rt, 2) if best_rt else None
+    avg_rt = round(avg_rt, 2) if avg_rt else None
 
     username = "".join(c for c in username if c.isalnum() or c == "_")[:15]
 

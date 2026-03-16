@@ -1,7 +1,7 @@
 import { showSticker, showMascot, clearAlerts } from "./alerts.js"
-const BASELINE_TIME = 21000
-const PATTERN_TIME = 21000
-const REPEATS = 10
+const BASELINE_TIME = 5000
+const PATTERN_TIME = 5000
+const REPEATS = 2
 
 const RESPONSE_WINDOW = 2000
 const MIN_DELAY = 2500
